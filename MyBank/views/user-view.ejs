@@ -1,0 +1,16 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts :</h2>
+<% accounts.forEach(function(account){ %>
+    <div style="display: flex; gap: 0.5rem">
+        <span><%= account.NAME %></span>
+        <span><%= account.AMOUNT %>$</span>
+    </div>
+<% }); %>
+
+<h2>Create a new account :</h2>
+<form action="/accounts" method="post">
+    <input type="hidden" name="userId" value="<%= currentUser.ID %>">
+    <label for="name">Account name :</label>
+    <input type="text" name="name" id="name" required>
+    <button type="submit">Create account</button>
+</form>
