@@ -1,0 +1,8 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts :</h2>
+<% accounts.forEach(function(account){ %>
+<div style="display: flex; gap: 0.5rem">
+  <span><%= account.NAME %></span>
+  <span><%= account.AMOUNT %>$</span>
+</div>
+<% }); %>
