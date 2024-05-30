@@ -1,0 +1,23 @@
+<h2>Nouvelle transaction</h2>
+<form action="/transactions" method="post">
+    <input type="hidden" name="userId" value="<%= currentUser.ID %>">
+    <input type="hidden" name="userId" value="<%= currentAccount.ID %>">
+
+    <label for="name">Nom de la transaction :</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="amount">Montant :</label>
+    <select id="type" name="type" required>
+        <option value="0">Retrait</option>
+        <option value="1">Dépôt</option>
+    </select><br><br>
+    <button type="submit">Créer transaction</button>
+</form>
+
+<h2>Historique des transactions</h2>
+<ul>
+    <% transactions.forEach(function(transaction) { %>
+        <li>
+            <%= transaction.name %> - <%= transaction.amount %> - <%= transaction.type === 0? 'Retrait' : 'Dépôt' %>
+        </li>
+    <% }); %>
+</ul>
