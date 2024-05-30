@@ -1,0 +1,10 @@
+<h1>Transactions du compte bancaire</h1>
+
+<% transactions.forEach(function(transaction) { %>
+  <div>
+    <p>Nom: <%= transaction.NAME %></p>
+    <p>Montant: <%= transaction.AMOUNT %></p>
+    <p>Type: <%= transaction.TYPE === 0 ? 'Dépôt' : 'Retrait' %></p>
+    <p>Date: <%= transaction.CREATION_TS %></p>
+  </div>
+<% }); %>
