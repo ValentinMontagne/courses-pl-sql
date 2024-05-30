@@ -1,0 +1,10 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts :</h2>
+<% accounts.forEach(function(account){ %>
+<div style="display: flex; gap: 0.5rem">
+  <span><%= account.NAME %></span>
+  <span><%= account.AMOUNT %>$</span>
+  <span>Nombre de transactions sur ce compte : <%= account.NB_TRANSACTION %></span>
+</div>
+<% }); %>
+<a href="localhost:3300/views/new_account.ejs">Créer un nouveau compte</a>

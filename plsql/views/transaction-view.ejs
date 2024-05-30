@@ -1,0 +1,10 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts :</h2>
+<div style="display: flex; flex-flow: column wrap; gap: 0.5rem">
+<% transaction.forEach(function(transaction){ %>
+<span><%= transaction.NAME %></span>
+<span><%= transaction.AMOUNT %></span>
+<span><%= transaction.TYPE %></span>
+<% }); %>
+</div>
+<a href="localhost:3300/views/new_transaction.ejs">Créer une nouvelle transaction</a>
