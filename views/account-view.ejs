@@ -1,0 +1,24 @@
+<h1>
+  Transactions for <br />
+  <%= account.NAME %> (<%= currentUser.NAME %>)
+</h1>
+
+SOLDE : <%= account.AMOUNT %>
+
+<h2>Create a new transaction</h2>
+<form action="/transactions" method="post">
+  <input type="hidden" name="account_id" value="<%= account.ID %>" />
+  <label for="name">Transaction Name:</label>
+  <input type="text" name="name" id="name" required />
+  <br />
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" required />
+  <br />
+  <label for="type">Type:</label>
+  <select name="type" id="type">
+    <option value="1">In</option>
+    <option value="0">Out</option>
+  </select>
+  <br />
+  <button type="submit">Create Transaction</button>
+</form>
