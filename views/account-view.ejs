@@ -1,0 +1,16 @@
+<h3>Transactions for Account <%= accountId %></h3>
+<ul>
+    <% transactions.forEach(transaction => { %>
+        <li><%= transaction.formatted_name %> - <%= transaction.amount %></li>
+    <% }); %>
+</ul>
+
+<form action="/views/<%= userId %>/<%= accountId %>/transactions" method="post">
+    <input type="text" name="name" placeholder="Transaction Name">
+    <input type="number" name="amount" placeholder="Amount">
+    <select name="type">
+        <option value="0">Out</option>
+        <option value="1">In</option>
+    </select>
+    <button type="submit">Add Transaction</button>
+</form>
