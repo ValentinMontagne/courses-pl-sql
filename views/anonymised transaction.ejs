@@ -1,0 +1,11 @@
+<h1>Transactions du compte bancaire</h1>
+
+<% transactions.forEach(function(transaction) { %>
+  <div>
+    <p>Montant: <%= transaction.AMOUNT %></p>
+    <p>Date: <%= transaction.CREATION_TS %></p>
+    <p>Compte: <%= transaction.ACCOUNT_ID %></p>
+    <p>Utilisateur: <%= transaction.USER_ID %></p>
+  </div>
+<% }); %>
+ 
