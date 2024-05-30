@@ -1,0 +1,14 @@
+<h1>Créer un nouveau compte</h1>
+
+<form action="/accounts" method="post">
+<% accounts.forEach(function(account){ %>
+  <label for="name">Account name:<%= account.NAME %></label>
+<% }); %>
+  <input type="text" id="name" name="name"><br><br>
+  <label for="amount">Amount :</label>
+  <input type="text" id="amount" name="amount"><br><br>
+  <label for="user_id">User ID :</label>
+  <input type="text" id="user_id" name="user_id"><br><br>
+  <button type="submit" value="Submit">Submit</button>
+  <button type="reset" value="Reset">Reset</button>
+</form>
