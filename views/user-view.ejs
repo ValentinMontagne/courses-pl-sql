@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User View</title>
+</head>
+<body>
+    <h1>Hello <%= currentUser.NAME %></h1>
+    <h2>Bank accounts :</h2>
+    <% accounts.forEach(function(account){ %>
+    <div style="display: flex; gap: 0.5rem">
+        <span><%= account.NAME %></span>
+        <span><%= account.AMOUNT %>$</span>
+        <span>Transactions: <%= account.TRANSACTIONS %></span>
+    </div>
+    <% }); %>
+
+    <h3>Transactions</h3>
+    <table>
+        <tr>
+            <th>Amount</th>
+            <th>Timestamp</th>
+        </tr>
+        <% transactions.forEach(function(transaction){ %>
+        <tr>
+            <td><%= transaction.AMOUNT %></td>
+            <td><%= transaction.CREATION_TS %></td>
+        </tr>
+        <% }); %>
+    </table>
+
+
+    <h3>Create a new transaction</h3>
+    <form action="/transactions" method="POST">
+        <input type="hidden" name="account_id" value="<%= accounts[0].ID %>">
+        <div>
+            <label for="name">Transaction Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
+        <div>
+            <label for="type">Type:</label>
+            <select id="type" name="type" required>
+                <option value="1">In</option>
+                <option value="0">Out</option>
+            </select>
+        </div>
+        <button type="submit">Create Transaction</button>
+    </form>
+</body>
+</html>
