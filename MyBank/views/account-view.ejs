@@ -1,0 +1,29 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts  '<%= accounts.NAME %>':</h2>
+<h2>💸💰🤑 : <%= accounts.AMOUNT %>$</h2>
+<p>Ajouter une nouvelle transaction :</p>
+<form action="/submit-transaction" method="POST">
+    <label for="name">Nom de la transaction:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="amount">Montant :</label>
+    <input type="number" id="amount" name="amount" required><br><br>
+    <label for="amount">Type :</label>
+    <select name="type" id="" required>
+      <option value="1" selected>In</option>
+      <option value="0">Out</option>
+    </select><br><br>
+    <button type="submit">Soumettre</button>
+</form>
+<h2>Mes transactions : </h2>
+<ul>
+  <% transactions.forEach(function(transaction){ %>
+  <li>
+      <span><%= transaction.NAME %></span>
+      <% if(transaction.TYPE == 1){ %>
+        <span>+<%= transaction.AMOUNT %>$</span>
+     <% } else{ %>
+        <span>-<%= transaction.AMOUNT %>$</span>
+      <% } %>
+  </li>
+  <% }); %>
+</ul>
