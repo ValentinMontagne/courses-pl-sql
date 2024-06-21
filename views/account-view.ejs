@@ -1,0 +1,19 @@
+<h1>Account: <%= account.NAME %></h1>
+<h2>Transactions:</h2>
+<% transactions.forEach(function(transaction){ %>
+    <div><%= transaction.NAME %></div>
+<% }); %>
+
+<form action="/transactions" method="POST">
+    <input type="hidden" name="user_id" value="<%= currentUser.ID %>">
+    <input type="hidden" name="account_id" value="<%= account.ID %>">
+    <label>Transaction Name: <input type="text" name="name"></label><br>
+    <label>Amount: <input type="number" name="amount"></label><br>
+    <label>Type:
+        <select name="type">
+            <option value="0">Out</option>
+            <option value="1">In</option>
+        </select>
+    </label><br>
+    <button type="submit">Create Transaction</button>
+</form>
