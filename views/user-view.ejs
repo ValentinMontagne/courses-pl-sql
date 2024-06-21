@@ -1,0 +1,26 @@
+<h1>Hello <%= currentUser.NAME %></h1>
+<h2>Bank accounts :</h2>
+<% accounts.forEach(function(account){ %>
+  <form action="/views/<%=currentUser.ID%>/<%=account.ID %>" method="GET">
+    <span><%= account.NAME %></span>
+    <span><%= account.AMOUNT %>$</span>
+    <button type="submit">Voir les transactions</button>
+  </form>
+
+
+<% }); %>
+<h3>Ajouter un Compte</h3>
+<form action="/accounts" method="POST">
+  <label for="name">Nom du Compte:</label>
+  <input type="text" id="name" name="name" required />
+  <input type="hidden" id="user_id" name="user_id" value="<%= currentUser.ID %>" required />
+  <br />  
+  <label for="amount">Montant:</label>
+  <input type="number" id="amount" name="amount" required />
+  <br />
+  <br />
+  <a href="user-view.ejs">
+    <button type="submit">Ajouter Compte</button>
+  </a>
+</form>
+
