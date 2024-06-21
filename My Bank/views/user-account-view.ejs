@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Accounts and Transactions</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .account {
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 0.25rem;
+      background-color: #f9f9f9;
+    }
+    .account-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .transaction-form label {
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="my-4">Hello <%= currentUser.NAME %></h1>
+    <h2>Bank accounts:</h2>
+    <div class="list-group">
+      <% accounts.forEach(function(account){ %>
+        <div class="account list-group-item">
+          <div class="account-header">
+            <span><%= account.NAME %></span>
+            <span><%= account.AMOUNT %>$</span>
+            <span>(<%= account.TRANSACTION_COUNT %> transactions)</span>
+          </div>
+
+          <h3>Create a new transaction</h3>
+          <form class="transaction-form" action="/create-transaction/" method="POST">
+            <div class="form-group">
+              <label for="name<%= account.ID %>">Transaction Name:</label>
+              <input type="text" id="name<%= account.ID %>" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="amount<%= account.ID %>">Amount:</label>
+              <input type="number" id="amount<%= account.ID %>" name="amount" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="type<%= account.ID %>">Type:</label>
+              <select id="type<%= account.ID %>" name="type" class="form-control" required>
+                <option value="1">In</option>
+                <option value="0">Out</option>
+              </select>
+            </div>
+            <input type="hidden" name="account_id" value="<%= account.ID %>">
+            <button type="submit" class="btn btn-primary mt-3">Create Transaction</button>
+          </form>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
