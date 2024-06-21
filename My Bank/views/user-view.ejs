@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Accounts</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .account {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 0.25rem;
+    }
+    .account span {
+      font-size: 1.1rem;
+    }
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 0.25rem;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="my-4">Hello <%= currentUser.NAME %></h1>
+    <h2>Bank accounts:</h2>
+    <div class="list-group">
+      <% accounts.forEach(function(account){ %>
+        <div class="account list-group-item">
+          <span><%= account.NAME %></span>
+          <span><%= account.AMOUNT %>$</span>
+        </div>
+      <% }); %>
+    </div>
+
+    <h2 class="my-4">Create a new bank account:</h2>
+    <form action="/accounts/" method="POST">
+      <div class="form-group">
+        <label for="account-name">Account Name:</label>
+        <input type="text" id="account-name" name="name" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="account-amount">Amount:</label>
+        <input type="number" id="account-amount" name="amount" class="form-control" required>
+      </div>
+      <input type="hidden" name="user_id" value="<%= currentUser.ID %>">
+      <button type="submit" class="btn btn-primary">Create Account</button>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
