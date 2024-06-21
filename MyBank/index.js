@@ -12,7 +12,7 @@ async function connectToDatabase() {
     connection = await oracledb.getConnection({
       user: "admin",
       password: "password",
-      connectionString: "0.0.0.0:1521/XEPDB1",
+      connectionString: "localhost:1521/XEPDB1",
     });
   } catch (err) {
     console.error(err);
@@ -82,8 +82,20 @@ async function setupDatabase() {
       REFERENCES accounts (id),
       creation_ts timestamp with time zone default current_timestamp,
       primary key (id)
-  )`
+  )
+  `
   );
+
+  // Création de l'index pour la table
+  await connection.execute(`CREATE INDEX transactions_id_accounts_id ON transactions(id, accounts_id)`);
+
+  // Création de la vue 
+
+  await connection.execute(`
+CREATE VIEW  transactions_view (amount, creation_ts,accounts_id,id)
+	AS SELECT amount,creation_ts,accounts_id,id
+	FROM transactions
+`)
   await connection.execute(
     `CREATE OR REPLACE PROCEDURE insert_user (
         p_user_name IN users.name%TYPE,
@@ -151,49 +163,31 @@ async function setupDatabase() {
   );
   await connection.execute(
     `
-    	
-CREATE OR REPLACE PROCEDURE export_accounts_to_csv IS
-	
-v_file UTL_FILE.FILE_TYPE;
-
-v_line VARCHAR2(32767);
-
+CREATE OR REPLACE PROCEDURE export_accounts_to_csv (
+    p_accounts_id IN INT
+) AS
+    v_file UTL_FILE.FILE_TYPE;
+    v_line VARCHAR2(32767);
+    v_filename VARCHAR2(255);
 BEGIN
-
-v_file := UTL_FILE.FOPEN('EXPORT_DIR', 'accounts.csv', 'W');
-
-
-
+v_filename := 'accounts' || p_accounts_id || '.csv';
+v_file := UTL_FILE.FOPEN('EXPORT_DIR', v_filename, 'W');
 UTL_FILE.PUT_LINE(v_file, 'ID,NAME,AMOUNT,USER_ID');
 
-
-
-FOR rec IN (SELECT id, name, amount, user_id FROM accounts) LOOP
-
+FOR rec IN (SELECT id, name, amount, user_id FROM accounts where id = p_accounts_id ) LOOP
   v_line := rec.id || ',' || rec.name || ',' || rec.amount || ',' || rec.user_id;
-
       UTL_FILE.PUT_LINE(v_file, v_line);
-
   END LOOP;
-
-
-
    UTL_FILE.FCLOSE(v_file);
-
 EXCEPTION
-
    WHEN OTHERS THEN
-
      IF UTL_FILE.IS_OPEN(v_file) THEN
-
          UTL_FILE.FCLOSE(v_file);
-
       END IF;
-
       RAISE;
-
 END;`
   );
+
   await connection.execute(
     `
     CREATE OR REPLACE PROCEDURE read_file(p_filename IN VARCHAR2, p_file_content OUT CLOB) IS
@@ -223,7 +217,8 @@ EXCEPTION
   WHEN OTHERS THEN
       RAISE_APPLICATION_ERROR(-20005, 'An error occurred: ' || SQLERRM);
 END read_file;`
-  )
+  );
+
 
   // Insert some data
   const usersSql = `insert into users (name, email, accounts) values(:1, :2, :3)`;
@@ -245,22 +240,31 @@ app.get("/", async (req, res) => {
   res.render("index"); // Assuming you have an "index.ejs" file in the "views" directory
 });
 
-app.get("/accounts/csv", async (req, res) => {
+app.post("/accounts/:accountId/exports", async (req, res) => {
   const fileExecAccount = `BEGIN
-	export_accounts_to_csv();
+	export_accounts_to_csv(:accountId);
   END;`;
+  const resultExecCSV = await connection.execute(fileExecAccount, {
+    accountId : req.params.accountId
+  })
 
-  const resultExecCSV = await connection.execute(fileExecAccount,{}) 
+  res.json({ content: "CSV generated." });
+});
+
+app.get("/accounts/:accountId/exports", async (req, res) => {
 
   const exportsSQL = `BEGIN
-	read_file('accounts.csv', :content);
+	read_file(:filename, :content);
   END;`;
+  const nameCSV = 'accounts'+req.params.accountId+'.csv'
   const result = await connection.execute(exportsSQL, {
+    filename : nameCSV,
     content: { dir: oracledb.BIND_OUT, type: oracledb.CLOB },
   });
   const data = await result.outBinds.content.getData();
   res.json({ content: data });
 });
+
 
 app.get("/users", async (req, res) => {
   const getUsersSQL = `select * from users`;
