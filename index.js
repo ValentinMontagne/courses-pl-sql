@@ -270,6 +270,47 @@ END;`
         END IF;
     END;`
     );
+    await connection.execute(
+      `CREATE OR REPLACE PROCEDURE generate_fake_transactions(
+    p_num_transactions IN NUMBER,
+    p_account_id IN NUMBER
+) IS
+BEGIN
+    FOR i IN 1..p_num_transactions LOOP
+        INSERT INTO transactions (name, amount, type, account_id, creation_ts)
+        VALUES (
+            'Transaction ' || i,
+            ROUND(DBMS_RANDOM.VALUE(-500, 500), 2),  -- Montant aléatoire entre -500 et 500
+            ROUND(DBMS_RANDOM.VALUE(0, 1)),          -- Type aléatoire (0 ou 1)
+            p_account_id,
+            SYSTIMESTAMP - DBMS_RANDOM.VALUE(0, 365) -- Date aléatoire dans l'année écoulée
+        );
+    END LOOP;
+    
+    COMMIT;
+END;`
+    );
+    await connection.execute(`
+      CREATE OR REPLACE PROCEDURE get_transactions_secure(
+    p_account_id IN NUMBER,
+    p_transactions OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_transactions FOR
+    SELECT 
+        id, 
+        amount, 
+        account_id, 
+        creation_ts
+    FROM 
+        transactions_secure
+    WHERE 
+        account_id = p_account_id
+    ORDER BY 
+        creation_ts;
+END;
+      `
+    );
   // Insert some data
   const usersSql = `insert into users (name, email, accounts) values(:1, :2, :3)`;
   const usersRows = [
@@ -282,7 +323,10 @@ END;`
   const accountsRows = [["Compte courant", 2000, 1, 0]];
   let accountsResult = await connection.executeMany(accountsSql, accountsRows);
   console.log(accountsResult.rowsAffected, "Accounts rows inserted");
-
+  await connection.execute(`CREATE INDEX idx_account_creation_ts ON transactions(account_id, creation_ts)`);
+  await connection.execute(`BEGIN
+    generate_fake_transactions(100000, 1);
+    END;`);
   connection.commit(); // Now query the rows back
 }
 
