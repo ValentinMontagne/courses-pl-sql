@@ -1,0 +1,30 @@
+<h1>Account: <%= currentAccount.NAME %> - User: <%= currentUser.NAME %></h1>
+<h2>Transactions:</h2>
+<% transactions.forEach(function(transaction){ %>
+  <div class="transaction">
+    <span>
+      Transaction ID: <%= transaction.ID %>
+    </span>
+    <span>
+      Amount: <%= transaction.AMOUNT %>$
+    </span>
+    <span>
+      Date: <%= transaction.CREATION_TS %>
+    </span>
+    <span>
+      Account ID: <%= transaction.ACCOUNT_ID %>
+    </span>
+  </div>
+<% }); %>
+<div class="back-button">
+  <form action="/views/<%= currentUser.ID %>" method="GET">
+    <button type="submit">Back to Accounts</button>
+  </form>
+</div>
+<h3>Generate Fake Transactions</h3>
+<form action="/generate-transactions" method="POST">
+  <input type="hidden" name="account_id" value="<%= currentAccount.ID %>">
+  <label for="num_transactions">Number of Transactions:</label>
+  <input type="number" id="num_transactions" name="num_transactions" required>
+  <button type="submit">Generate Transactions</button>
+</form>
