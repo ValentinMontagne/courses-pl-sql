@@ -1,0 +1,29 @@
+<h1>Hello <%= currentUser.NAME %>
+</h1>
+<h2>Bank accounts :</h2>
+<% accounts.forEach(function(account){ %>
+    <div style="display: flex; gap: 0.5rem">
+        <span>
+            <%= account.NAME %>
+        </span>
+        <span>
+            <%= account.AMOUNT %>$
+        </span>
+    </div>
+    <h2>Add bank accounts :</h2>
+    <form action="/submit_form" method="post" style="margin-top:1rem">
+        <div style="padding-bottom: 0.5rem">
+            <label for="">Name</label>
+            <input type="text">
+        </div>
+        <div style="padding-bottom: 0.5rem"> <label for="">Amount</label>
+            <input type="number">
+        </div>
+        <div style="padding-bottom: 0.5rem"><label for="">User ID</label>
+            <input type="number">
+        </div>
+        <div style="padding-bottom: 0.5rem">
+            <input type="submit" value="Add account">
+        </div>
+    </form>
+    <% }); %>
